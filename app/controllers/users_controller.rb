@@ -1,0 +1,57 @@
+class UsersController < ApplicationController
+  before_action :set_user, only: [:show, :update, :destroy]
+
+
+  # LIST
+  def index
+    @users = User.all
+    render json: @users
+  end
+
+  # SHOW EACH INFO
+  def show
+    render json: @user
+  end
+
+  # SIGNUP
+  def create
+    @user = User.create(user_params)
+
+    if @user.valid?
+      token = encode_token({ user_id: @user.id })
+      render json: { user: @user, token: token},  status: 200
+    else
+      render json: { error: 'Invalid!!!' }, status: :unprocessable_entity
+    end
+  end
+
+  #LOGIN
+  def login
+    @user = User.find_by(nick: user_params[:nick])
+    if @user && @user.authenticate(user_params[:password])
+      token = encode_token({ user_id: @user.id })
+      render json: { user: @user, token: token }, status: :ok
+    else
+      render json: { error: 'Invalid username or password' }, status: :unprocessable_entity #422
+    end
+  end
+
+  # UPDATE
+  def update
+    if @user.update(user_params)
+      render json: @user
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
+  # DELETE 
+  def destroy
+    @user.destroy
+  end
+
+  private
+    def user_params
+      params.require(:user).permit(:nick, :password, :email)
+    end
+end
