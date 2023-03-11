@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :authorize, only: [:index, :update, :destroy]
-  before_action :set_user, only: [:index, :update, :destroy]
+  before_action :authorize, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show, :update, :destroy]
 
 
   # SHOW EACH INFO
@@ -9,6 +9,11 @@ class UsersController < ApplicationController
     render json: { user: @user},  status: 200
   end
 
+  # SHOW EACH INFO
+  def show
+    # @users = User.all
+    render json: { user: @user},  status: 200
+  end
 
 
   # SIGNUP
