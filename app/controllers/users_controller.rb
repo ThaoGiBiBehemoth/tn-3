@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :authorize
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :authorize, only: [:index, :update, :destroy]
+  before_action :set_user, only: [:index, :update, :destroy]
 
 
   # SHOW EACH INFO
