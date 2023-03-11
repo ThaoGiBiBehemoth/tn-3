@@ -30,7 +30,7 @@ class UsersController < ApplicationController
       token = encode_token({ user_id: @user.id })
       render json: { user: @user, token: token }, status: :ok
     else
-      render json: { error: 'Invalid username or password' }, status: :unprocessable_entity #422
+      render json: { error: 'Invalid username or password' }, status: 422
     end
   end
 
@@ -51,5 +51,9 @@ class UsersController < ApplicationController
   private
     def user_params
       params.require(:user).permit(:nick, :password, :email)
+    end
+    
+    def set_user
+      @user = User.find(params[:id])
     end
 end
